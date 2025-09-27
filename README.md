@@ -1,7 +1,7 @@
 # CiCaWa - Circular Waste Management Platform 🌱♻️
 
 
-**Team: Neural Nomads**
+**Team: Neural Nomads***
 
 A comprehensive digital platform that revolutionizes waste management by creating a circular economy ecosystem connecting citizens, workers, NGOs, and businesses.
 
