@@ -61,10 +61,10 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-teal-200 border-t-teal-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-caption text-slate-600">Loading dashboard...</p>
+          <div className="w-12 h-12 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-caption text-emerald-600">Loading dashboard...</p>
         </div>
       </div>
     );
@@ -76,12 +76,12 @@ export default function DashboardPage() {
 
   return (
     <AppLayout title="Dashboard" user={user}>
-      <div className="container py-6 bg-gradient-to-br from-slate-50 to-gray-50 min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Welcome Section */}
         <div 
-          className="card mb-6 text-white" 
+          className="rounded-lg p-6 mb-8 text-white" 
           style={{
-            background: 'linear-gradient(135deg, #0f766e, #0d9488, #06b6d4)'
+            background: 'linear-gradient(135deg, #059669, #10b981, #34d399)'
           }}
         >
           <h1 className="text-title mb-2">Welcome back, {user.name}!</h1>
@@ -101,20 +101,20 @@ export default function DashboardPage() {
 
         {/* API Status */}
         {Object.keys(prices).length > 0 && (
-          <div className="card card-compact mb-6 border-teal-200 bg-gradient-to-r from-teal-50 to-cyan-50">
+          <div className="bg-white rounded-lg p-4 shadow-sm border border-emerald-200 mb-8">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <p className="text-body text-teal-800 font-medium">Connected to API successfully!</p>
+              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+              <p className="text-body text-emerald-800 font-medium">Connected to API successfully!</p>
             </div>
-            <p className="text-caption text-teal-600 mt-1">
+            <p className="text-caption text-emerald-600 mt-1">
               Loaded {Object.keys(prices).length} waste price categories
             </p>
           </div>
         )}
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div className="card card-compact">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div className="bg-white rounded-lg p-6 shadow-lg border border-emerald-200">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-caption">Active Requests</p>
@@ -122,20 +122,20 @@ export default function DashboardPage() {
                   {requests.filter((r) => r.status !== 'completed' && r.status !== 'cancelled').length}
                 </p>
               </div>
-              <div className="bg-gradient-to-br from-teal-100 to-teal-200 p-3 rounded-lg shadow-sm">
-                <Trash2 className="h-6 w-6 text-teal-700" />
+              <div className="bg-gradient-to-br from-emerald-100 to-emerald-200 p-3 rounded-lg shadow-sm">
+                <Trash2 className="h-6 w-6 text-emerald-700" />
               </div>
             </div>
           </div>
           
-          <div className="card card-compact">
+          <div className="bg-white rounded-lg p-6 shadow-lg border border-emerald-200">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-caption">Waste Types</p>
                 <p className="text-title">{Object.keys(prices).length}</p>
               </div>
-              <div className="bg-gradient-to-br from-blue-100 to-blue-200 p-3 rounded-lg shadow-sm">
-                <DollarSign className="h-6 w-6 text-blue-700" />
+              <div className="bg-gradient-to-br from-green-100 to-green-200 p-3 rounded-lg shadow-sm">
+                <DollarSign className="h-6 w-6 text-green-700" />
               </div>
             </div>
           </div>
@@ -143,15 +143,15 @@ export default function DashboardPage() {
 
         {/* Quick Actions */}
         <div className="mb-6">
-          <h2 className="text-heading mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <h2 className="text-xl font-bold text-emerald-800 mb-6">Quick Actions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <button 
               onClick={() => router.push('/waste')}
-              className="card card-compact text-left transition-smooth hover:transform hover:-translate-y-1 hover:shadow-lg border-l-4 border-teal-500"
+              className="bg-white rounded-lg p-6 shadow-lg border border-emerald-200 text-left transition-all duration-200 hover:transform hover:-translate-y-1 hover:shadow-xl hover:border-emerald-300"
             >
               <div className="flex items-center space-x-3">
-                <div className="bg-gradient-to-br from-teal-100 to-teal-200 p-3 rounded-lg shadow-sm">
-                  <Plus className="h-6 w-6 text-teal-700" />
+                <div className="bg-gradient-to-br from-emerald-100 to-emerald-200 p-3 rounded-lg shadow-sm">
+                  <Plus className="h-6 w-6 text-emerald-700" />
                 </div>
                 <div>
                   <h3 className="text-subheading">Request Pickup</h3>
@@ -162,11 +162,11 @@ export default function DashboardPage() {
             
             <button 
               onClick={() => router.push('/marketplace')}
-              className="card card-compact text-left transition-smooth hover:transform hover:-translate-y-1 hover:shadow-lg border-l-4 border-blue-500"
+              className="bg-white rounded-lg p-6 shadow-lg border border-emerald-200 text-left transition-all duration-200 hover:transform hover:-translate-y-1 hover:shadow-xl hover:border-emerald-300"
             >
               <div className="flex items-center space-x-3">
-                <div className="bg-gradient-to-br from-blue-100 to-blue-200 p-3 rounded-lg shadow-sm">
-                  <ShoppingCart className="h-6 w-6 text-blue-700" />
+                <div className="bg-gradient-to-br from-green-100 to-green-200 p-3 rounded-lg shadow-sm">
+                  <ShoppingCart className="h-6 w-6 text-green-700" />
                 </div>
                 <div>
                   <h3 className="text-subheading">Browse Market</h3>
@@ -179,13 +179,13 @@ export default function DashboardPage() {
 
         {/* Waste Prices */}
         {Object.keys(prices).length > 0 && (
-          <div className="card mb-6 bg-gradient-to-r from-slate-50 to-gray-50">
-            <h2 className="text-heading mb-4 text-slate-800">Current Waste Prices</h2>
+          <div className="bg-white rounded-lg p-6 shadow-lg border border-emerald-200 mb-6">
+            <h2 className="text-xl font-bold text-emerald-800 mb-6">Current Waste Prices</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {Object.entries(prices).map(([type, price]) => (
-                <div key={type} className="bg-white rounded-lg p-3 transition-smooth hover:bg-gradient-to-br hover:from-teal-50 hover:to-cyan-50 border border-gray-200 hover:border-teal-200 shadow-sm hover:shadow-md">
-                  <p className="text-body font-medium capitalize text-slate-700">{type}</p>
-                  <p className="text-caption text-teal-600 font-bold text-lg">${price}/kg</p>
+                <div key={type} className="bg-white rounded-lg p-3 transition-smooth hover:bg-gradient-to-br hover:from-emerald-50 hover:to-green-50 border border-gray-200 hover:border-emerald-200 shadow-sm hover:shadow-md">
+                  <p className="text-body font-medium capitalize text-emerald-700">{type}</p>
+                  <p className="text-caption text-emerald-600 font-bold text-lg">${price}/kg</p>
                 </div>
               ))}
             </div>
@@ -193,15 +193,15 @@ export default function DashboardPage() {
         )}
 
         {/* Recent Activity */}
-        <div className="card bg-gradient-to-r from-slate-50 to-gray-50">
-          <h2 className="text-heading mb-4 text-slate-800">Recent Activity</h2>
+        <div className="bg-white rounded-lg p-6 shadow-lg border border-emerald-200">
+          <h2 className="text-xl font-bold text-emerald-800 mb-6">Recent Activity</h2>
           {requests.length === 0 ? (
             <div className="text-center py-8">
-              <div className="bg-gradient-to-br from-slate-100 to-gray-200 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-sm">
-                <TrendingUp className="h-8 w-8 text-slate-500" />
+              <div className="bg-gradient-to-br from-emerald-100 to-green-200 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-sm">
+                <TrendingUp className="h-8 w-8 text-emerald-500" />
               </div>
-              <p className="text-body mb-2 text-slate-700">No recent activity</p>
-              <p className="text-caption text-slate-500">Start by creating your first waste pickup request!</p>
+              <p className="text-body mb-2 text-emerald-700">No recent activity</p>
+              <p className="text-caption text-emerald-500">Start by creating your first waste pickup request!</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -210,10 +210,10 @@ export default function DashboardPage() {
                 .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
                 .slice(0, 5)
                 .map((request) => (
-                  <div key={request.id} className="flex items-center justify-between p-3 bg-white rounded-lg transition-smooth hover:bg-gradient-to-r hover:from-teal-50 hover:to-cyan-50 border border-gray-200 hover:border-teal-200 shadow-sm hover:shadow-md">
+                  <div key={request.id} className="flex items-center justify-between p-3 bg-white rounded-lg transition-smooth hover:bg-gradient-to-r hover:from-emerald-50 hover:to-green-50 border border-gray-200 hover:border-emerald-200 shadow-sm hover:shadow-md">
                     <div>
-                      <p className="text-body font-medium capitalize text-slate-700">{request.waste_type}</p>
-                      <p className="text-caption text-slate-500">{request.quantity} kg • {request.pickup_address}</p>
+                      <p className="text-body font-medium capitalize text-emerald-700">{request.waste_type}</p>
+                      <p className="text-caption text-emerald-500">{request.quantity} kg • {request.pickup_address}</p>
                     </div>
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                       request.status === 'completed' ? 'bg-green-100 text-green-800 border border-green-200' :
