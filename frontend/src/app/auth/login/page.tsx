@@ -47,9 +47,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-100 flex flex-col">
       {/* Header */}
-      <div className="bg-white shadow-sm p-4">
+      <div className="bg-white shadow-sm p-4 border-b border-emerald-200">
         <div className="flex items-center space-x-3">
           <Link href="/" className="p-2 -ml-2 rounded-lg hover:bg-gray-100">
             <ArrowLeft className="h-6 w-6" />
@@ -62,11 +62,11 @@ export default function LoginPage() {
       <div className="flex-1 p-6">
         <div className="max-w-md mx-auto">
           <div className="text-center mb-8">
-            <div className="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-              <Mail className="h-8 w-8 text-emerald-600" />
+            <div className="bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <Mail className="h-8 w-8 text-emerald-700" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back!</h2>
-            <p className="text-gray-700">Sign in to access your CiCaWa account</p>
+            <h2 className="text-2xl font-bold text-emerald-900 mb-2">Welcome Back!</h2>
+            <p className="text-emerald-700">Sign in to access your CiCaWa account</p>
           </div>
 
           {error && (

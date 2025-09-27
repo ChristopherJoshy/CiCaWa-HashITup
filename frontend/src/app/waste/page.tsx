@@ -202,10 +202,10 @@ export default function WastePage() {
 
   if (loading || !user) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500 mx-auto mb-4"></div>
-          <p>Loading waste management...</p>
+          <div className="w-12 h-12 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-emerald-600">Loading waste management...</p>
         </div>
       </div>
     );
@@ -214,14 +214,14 @@ export default function WastePage() {
   return (
     <AppLayout title="Waste Pickup" user={user}>
       <div className="p-4 space-y-6">
-        <section className="bg-white rounded-lg p-4 shadow-sm">
+        <section className="bg-white rounded-lg p-4 shadow-sm border border-emerald-200">
           <div className="flex items-center space-x-3 mb-4">
-            <div className="bg-emerald-100 p-3 rounded-lg">
-              <Recycle className="h-6 w-6 text-emerald-600" />
+            <div className="bg-gradient-to-br from-emerald-100 to-emerald-200 p-3 rounded-lg shadow-sm">
+              <Recycle className="h-6 w-6 text-emerald-700" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">Schedule Pickup</h2>
-              <p className="text-sm text-gray-600">Request a waste collection with AI-assisted pricing.</p>
+              <h2 className="text-lg font-semibold text-emerald-900">Schedule Pickup</h2>
+              <p className="text-sm text-emerald-600">Request a waste collection with AI-assisted pricing.</p>
             </div>
           </div>
 

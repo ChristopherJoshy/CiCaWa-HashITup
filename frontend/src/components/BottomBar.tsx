@@ -16,7 +16,7 @@ export default function BottomBar() {
   const pathname = usePathname();
 
   return (
-    <div className="bg-white border-t border-gray-200 fixed bottom-0 left-0 right-0 z-50 shadow-lg">
+    <div className="bg-white border-t border-emerald-200 fixed bottom-0 left-0 right-0 z-50 shadow-lg">
       <div className="grid grid-cols-5">
         {navItems.map(({ icon: Icon, label, href }) => {
           const isActive = pathname === href;

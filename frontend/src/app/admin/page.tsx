@@ -15,6 +15,8 @@ export default function AdminPage() {
   const [editingPrice, setEditingPrice] = useState<{ type: string; price: number } | null>(null);
   const [loading, setLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [searchEmail, setSearchEmail] = useState('');
+  const [filteredUsers, setFilteredUsers] = useState<ApiUser[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -47,6 +49,7 @@ export default function AdminPage() {
         ]);
         setPrices(wastePrices);
         setUsers(usersList);
+        setFilteredUsers(usersList);
       } catch (error) {
         console.error('❌ Admin API Error:', error);
         if (error instanceof Error && error.message.includes('401')) {
@@ -62,12 +65,26 @@ export default function AdminPage() {
     loadData();
   }, [router]);
 
+  // Filter users based on search
+  const handleSearchChange = (email: string) => {
+    setSearchEmail(email);
+    if (email.trim() === '') {
+      setFilteredUsers(users);
+    } else {
+      const filtered = users.filter(u => 
+        u.email.toLowerCase().includes(email.toLowerCase()) ||
+        u.name.toLowerCase().includes(email.toLowerCase())
+      );
+      setFilteredUsers(filtered);
+    }
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="spinner spinner-lg mx-auto mb-4"></div>
-          <p className="text-caption">Loading admin panel...</p>
+          <div className="w-12 h-12 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-caption text-emerald-600">Loading admin panel...</p>
         </div>
       </div>
     );
@@ -110,35 +127,27 @@ export default function AdminPage() {
     }
   };
 
-  const filteredUsers = users.filter((u) => u.id !== user?.id);
-
   return (
     <AppLayout title="Admin Panel" user={user} showBottomNav={false}>
       <div className="container py-6">
         {/* Admin Header */}
+        {/* Admin Header */}
         <div 
           className="card mb-6 text-white" 
           style={{
-            background: 'linear-gradient(135deg, #ef4444, #dc2626)'
+            background: 'linear-gradient(135deg, #059669, #10b981, #34d399)'
           }}
         >
-          <div className="flex items-center space-x-3 mb-2">
-            <Shield className="h-8 w-8" />
-            <h1 className="text-title">Admin Panel</h1>
+          <div className="flex items-center space-x-3">
+            <div className="bg-white bg-opacity-20 p-3 rounded-lg">
+              <Shield className="h-8 w-8" />
+            </div>
+            <div>
+              <h1 className="text-title mb-2">Admin Panel</h1>
+              <p className="text-body opacity-90">Welcome back, {user.name}!</p>
+            </div>
           </div>
-          <p className="text-body opacity-90 mb-3">System administration and management</p>
-          <div 
-            className="badge" 
-            style={{
-              background: 'rgba(255,255,255,0.2)', 
-              color: 'white'
-            }}
-          >
-            {user.name} ({user.email})
-          </div>
-        </div>
-
-        {/* Admin Stats */}
+        </div>        {/* Admin Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div className="card card-compact">
             <div className="flex items-center justify-between">
@@ -181,51 +190,80 @@ export default function AdminPage() {
 
         {/* Admin Actions */}
         <div className="space-y-6">
-          <section className="card">
+          <section className="card bg-gradient-to-r from-emerald-50 to-green-50">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-heading">User Management</h2>
+              <h2 className="text-heading text-emerald-800">User Role Management</h2>
               {roleUpdateStatus && (
-                <span className={`text-caption ${
+                <span className={`text-caption font-medium ${
                   roleUpdateStatus.includes('successfully') ? 'text-emerald-600' : 'text-red-600'
                 }`}>{roleUpdateStatus}</span>
               )}
             </div>
+            
+            {/* Search Users */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-emerald-700 mb-2">
+                Search Users by Email or Name
+              </label>
+              <input
+                type="text"
+                placeholder="Enter email or name to search..."
+                value={searchEmail}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                className="w-full px-3 py-2 border border-emerald-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              />
+              <p className="text-xs text-emerald-600 mt-1">
+                Found {filteredUsers.length} user(s) | Available roles: User, Worker, NGO, Haritha Karma, Admin
+              </p>
+            </div>
             {filteredUsers.length === 0 ? (
-              <p className="text-sm text-gray-600">No users available for management.</p>
+              <div className="text-center py-8">
+                <div className="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <Users className="h-8 w-8 text-emerald-500" />
+                </div>
+                <p className="text-body text-emerald-700 mb-2">No users found</p>
+                <p className="text-caption text-emerald-500">
+                  {searchEmail ? 'Try adjusting your search terms' : 'No users available for management'}
+                </p>
+              </div>
             ) : (
               <div className="space-y-3">
                 {filteredUsers.map((userItem) => (
-                  <div key={userItem.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border">
+                  <div key={userItem.id} className="flex items-center justify-between p-4 bg-white rounded-lg border border-emerald-200 hover:border-emerald-300 transition-colors shadow-sm">
                     <div className="flex-1">
                       <div className="flex items-center space-x-3">
+                        <div className="bg-emerald-100 rounded-full p-2">
+                          <Users className="h-4 w-4 text-emerald-600" />
+                        </div>
                         <div>
-                          <p className="font-medium text-gray-900">{userItem.name}</p>
-                          <p className="text-sm text-gray-600">{userItem.email}</p>
+                          <p className="font-medium text-emerald-900">{userItem.name}</p>
+                          <p className="text-sm text-emerald-700">{userItem.email}</p>
                           {userItem.phone && (
-                            <p className="text-xs text-gray-500">{userItem.phone}</p>
+                            <p className="text-xs text-emerald-500">{userItem.phone}</p>
                           )}
                         </div>
                       </div>
                       {userItem.address && (
-                        <p className="text-xs text-gray-500 mt-1 truncate">{userItem.address}</p>
+                        <p className="text-xs text-emerald-500 mt-2 truncate pl-11">{userItem.address}</p>
                       )}
                     </div>
                     <div className="flex items-center space-x-3">
                       <div className="text-right">
-                        <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                          userItem.role === 'admin' ? 'bg-red-100 text-red-800' :
-                          userItem.role === 'worker' ? 'bg-blue-100 text-blue-800' :
-                          userItem.role === 'ngo' ? 'bg-green-100 text-green-800' :
-                          'bg-gray-100 text-gray-800'
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${
+                          userItem.role === 'admin' ? 'bg-red-100 text-red-800 border-red-200' :
+                          userItem.role === 'worker' ? 'bg-blue-100 text-blue-800 border-blue-200' :
+                          userItem.role === 'ngo' ? 'bg-emerald-100 text-emerald-800 border-emerald-200' :
+                          userItem.role === 'haritha_karma' ? 'bg-green-100 text-green-800 border-green-200' :
+                          'bg-gray-100 text-gray-800 border-gray-200'
                         }`}>
-                          {userItem.role}
+                          {userItem.role === 'haritha_karma' ? 'Haritha Karma' : userItem.role.toUpperCase()}
                         </span>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-emerald-500 mt-1">
                           ID: {userItem.id}
                         </p>
                       </div>
                       <select
-                        className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
+                        className="border border-emerald-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                         value={userItem.role}
                         onChange={(event) => handleRoleUpdate(userItem.email, event.target.value)}
                         disabled={isUpdating}
@@ -233,6 +271,7 @@ export default function AdminPage() {
                         <option value="user">User</option>
                         <option value="worker">Worker</option>
                         <option value="ngo">NGO</option>
+                        <option value="haritha_karma">Haritha Karma</option>
                         <option value="admin">Admin</option>
                       </select>
                     </div>

@@ -131,59 +131,58 @@ def classify_waste(description: str, image_data: bytes | None = None) -> Dict[st
             "fallback_type": "organic"
         }
 
-def chat_with_ai(message: str, context: str = "") -> Dict[str, Any]:
+def chat_with_ai(user_message: str) -> str:
     """
-    General AI chat for guidance and support.
-    Returns deterministic responses with helpfulness validation.
+    Chat with AI for waste management advice and general queries.
     """
     try:
+        # Enhanced system prompt for waste advice
         system_prompt = (
-            "You are CiCaWa AI assistant, helping users with waste management, "
-            "recycling guidance, and marketplace questions. Provide helpful, "
-            "accurate, and concise responses. Focus on practical advice. "
-            f"Context: {context}. "
-            "Respond with JSON: {'response': 'your_helpful_response', 'helpful': true/false}"
+            "You are CiCaWa Assistant, an expert in waste management and environmental sustainability. "
+            "Your expertise includes:\n"
+            "- Identifying waste types and their disposal methods\n"
+            "- Advising whether items can be sold, donated to NGOs, or given to Haritha Karma workers\n"
+            "- Providing DIY recycling and upcycling ideas\n"
+            "- Safe disposal methods for hazardous materials\n"
+            "- Environmental impact and sustainability tips\n\n"
+            
+            "For each waste item mentioned, provide:\n"
+            "1. Classification (plastic, metal, paper, organic, electronic, textile, glass, hazardous)\n"
+            "2. Best disposal option:\n"
+            "   - SELL: If it has market value (metals, electronics, certain plastics)\n"
+            "   - NGO DONATION: If suitable for charity (clothes, food, books)\n"
+            "   - HARITHA KARMA: For general recyclables and organic waste\n"
+            "   - SPECIAL DISPOSAL: For hazardous materials\n"
+            "3. DIY reuse ideas if applicable\n"
+            "4. Environmental tips\n\n"
+            
+            "Keep responses concise, practical, and actionable. Use bullet points for clarity."
         )
 
+        # Create the messages for the chat
+        messages = [
+            types.Content(
+                role="user",
+                parts=[types.Part.from_text(f"{system_prompt}\n\nUser: {user_message}")],
+            )
+        ]
+
+        # Get client and generate response
         client = get_client()
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=[
-                types.Content(role="user", parts=[types.Part(text=message)])
-            ],
+            model="gemini-2.0-flash-exp",
+            contents=messages,
             config=types.GenerateContentConfig(
-                system_instruction=system_prompt,
-                response_mime_type="application/json",
-                response_schema=ChatResponse,
+                max_output_tokens=800,
+                temperature=0.7,
             ),
         )
 
-        raw_json = response.text
-        logging.info(f"AI chat raw JSON: {raw_json}")
-
-        if raw_json:
-            data = json.loads(raw_json)
-            chat_response = ChatResponse(**data)
-            
-            return {
-                "success": True,
-                "response": chat_response.response,
-                "helpful": chat_response.helpful
-            }
+        if response.text:
+            return response.text.strip()
         else:
-            raise ValueError("Empty response from model")
+            return "I'm sorry, I couldn't process your request. Please try again."
 
     except Exception as e:
-        if isinstance(e, RuntimeError) and "Gemini API key" in str(e):
-            logging.warning("Gemini API key missing; returning fallback chat response")
-            return {
-                "success": False,
-                "error": "Gemini API key not configured",
-                "response": "I'm sorry, I couldn't process your request right now. Please try again later."
-            }
-        logging.error(f"Failed to process chat: {e}")
-        return {
-            "success": False,
-            "error": str(e),
-            "response": "I'm sorry, I couldn't process your request right now. Please try again later."
-        }
+        logging.error(f"Error in chat_with_ai: {str(e)}")
+        return "I'm currently unavailable. Please try again later."

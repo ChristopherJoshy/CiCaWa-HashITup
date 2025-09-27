@@ -2,6 +2,7 @@
 
 import TopBar from './TopBar';
 import BottomBar from './BottomBar';
+import WasteAdviceChatbot from './WasteAdviceChatbot';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -9,6 +10,7 @@ interface AppLayoutProps {
   user?: {
     name: string;
     role: string;
+    email?: string;
   };
   showBottomNav?: boolean;
 }
@@ -20,7 +22,7 @@ export default function AppLayout({
   showBottomNav = true 
 }: AppLayoutProps) {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-emerald-50 to-green-50">
       <TopBar title={title} user={user} />
       
       <main className={`flex-1 overflow-y-auto ${showBottomNav ? 'pb-20' : 'pb-4'}`}>
@@ -28,6 +30,7 @@ export default function AppLayout({
       </main>
       
       {showBottomNav && <BottomBar />}
+      <WasteAdviceChatbot />
     </div>
   );
 }

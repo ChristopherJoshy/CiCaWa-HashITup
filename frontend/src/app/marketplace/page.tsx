@@ -127,10 +127,10 @@ export default function MarketplacePage() {
 
   if (loading || !user) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="spinner spinner-lg mx-auto mb-4"></div>
-          <p className="text-caption">Loading marketplace...</p>
+          <div className="w-12 h-12 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-emerald-600">Loading marketplace...</p>
         </div>
       </div>
     );
@@ -138,15 +138,15 @@ export default function MarketplacePage() {
 
   return (
     <AppLayout title="Marketplace" user={user}>
-      <div className="container py-6 space-y-6">
-        <section className="card">
+      <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
+        <section className="bg-white rounded-lg p-6 shadow-lg border border-emerald-200">
           <div className="flex items-center space-x-3 mb-6">
-            <div className="bg-emerald-100 p-3 rounded-lg">
-              <ShoppingCart className="h-6 w-6 text-emerald-600" />
+            <div className="bg-gradient-to-br from-emerald-100 to-emerald-200 p-3 rounded-lg shadow-sm">
+              <ShoppingCart className="h-6 w-6 text-emerald-700" />
             </div>
             <div>
-              <h2 className="text-heading">Post New Listing</h2>
-              <p className="text-caption">Connect recycled goods with buyers and circular partners.</p>
+              <h2 className="text-xl font-bold text-emerald-800">Post New Listing</h2>
+              <p className="text-emerald-600">Connect recycled goods with buyers and circular partners.</p>
             </div>
           </div>
 

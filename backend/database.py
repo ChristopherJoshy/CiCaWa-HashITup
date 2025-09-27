@@ -17,6 +17,7 @@ class UserRole(str, enum.Enum):
     USER = "user"
     WORKER = "worker"
     NGO = "ngo"
+    HARITHA_KARMA = "haritha_karma"
     ADMIN = "admin"
 
 class RequestStatus(str, enum.Enum):

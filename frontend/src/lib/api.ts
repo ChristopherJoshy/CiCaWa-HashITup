@@ -271,16 +271,10 @@ class ApiClient {
     return this.request('/waste-requests');
   }
 
-  async createWasteRequest(payload: WasteRequestPayload, photo?: File) {
-    const formData = new FormData();
-    formData.append('waste_data', JSON.stringify(payload));
-    if (photo) {
-      formData.append('photo', photo);
-    }
-
+  async createWasteRequest(payload: WasteRequestPayload) {
     return this.request('/waste-requests', {
       method: 'POST',
-      body: formData,
+      body: JSON.stringify(payload),
     });
   }
 
@@ -379,6 +373,13 @@ class ApiClient {
     return this.request('/ai/chat', {
       method: 'POST',
       body: JSON.stringify({ message, context }),
+    });
+  }
+
+  async chatWithAI(payload: { message: string }) {
+    return this.request('/ai/chat', {
+      method: 'POST',
+      body: JSON.stringify(payload),
     });
   }
 }

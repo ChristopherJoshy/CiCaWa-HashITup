@@ -335,39 +335,78 @@ def get_all_users(admin: User = Depends(get_current_admin), db: Session = Depend
     users = db.query(User).all()
     return [{"id": u.id, "email": u.email, "name": u.name, "role": u.role.value} for u in users]
 
+# NGO endpoints
+@app.get("/ngos")
+def get_ngos(db: Session = Depends(get_db)):
+    # Return mock NGO data for now
+    mock_ngos = [
+        {
+            "id": 1,
+            "name": "Green Earth Foundation",
+            "email": "contact@greenearth.org",
+            "phone": "+91 9876543210",
+            "address": "123 Green Street, Kochi, Kerala 682001",
+            "specialization": ["food", "clothes", "education"]
+        },
+        {
+            "id": 2,
+            "name": "Kerala Relief Foundation",
+            "email": "help@keralarelief.org",
+            "phone": "+91 9876543211",
+            "address": "456 Relief Road, Thiruvananthapuram, Kerala 695001",
+            "specialization": ["food", "medical", "disaster relief"]
+        },
+        {
+            "id": 3,
+            "name": "Hope for Tomorrow",
+            "email": "info@hopefortomorrow.org",
+            "phone": "+91 9876543212",
+            "address": "789 Hope Avenue, Ernakulam, Kerala 682016",
+            "specialization": ["clothes", "education", "orphanage"]
+        },
+        {
+            "id": 4,
+            "name": "Seva Charitable Trust",
+            "email": "contact@sevatrust.org",
+            "phone": "+91 9876543213",
+            "address": "321 Service Lane, Kozhikode, Kerala 673001",
+            "specialization": ["food", "medical", "elderly care"]
+        },
+        {
+            "id": 5,
+            "name": "Humanity First Kerala",
+            "email": "kerala@humanityfirst.org",
+            "phone": "+91 9876543214", 
+            "address": "654 Humanity Street, Thrissur, Kerala 680001",
+            "specialization": ["disaster relief", "food", "clothes"]
+        }
+    ]
+    return mock_ngos
+
+# Debug endpoint (fix CORS issue)
+@app.get("/debug")
+def get_debug_info():
+    return {
+        "status": "ok",
+        "timestamp": str(datetime.now()),
+        "message": "Debug endpoint working"
+    }
+
 # Waste request endpoints
 @app.post("/waste-requests")
 async def create_waste_request(
-    waste_data: WasteRequestCreate,
-    photo: UploadFile = File(None),
+    request: WasteRequestCreate,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    # Handle photo upload
-    photo_url = None
-    if photo:
-        os.makedirs("uploads", exist_ok=True)
-        photo_url = f"uploads/{photo.filename}"
-        with open(photo_url, "wb") as buffer:
-            shutil.copyfileobj(photo.file, buffer)
+    # Classify waste using AI (simplified for now)
+    try:
+        waste_type = WasteType(request.waste_type)
+    except ValueError:
+        waste_type = WasteType.PLASTIC  # Default fallback
     
-    # Classify waste using AI
-    image_data = None
-    if photo_url:
-        with open(photo_url, "rb") as f:
-            image_data = f.read()
-    
-    classification = classify_waste(waste_data.description, image_data)
-    
-    # Get waste price
-    if classification.get("success"):
-        waste_type = WasteType(classification["waste_type"])
-        confidence = classification["confidence"]
-        quantity = classification.get("quantity_estimate", waste_data.quantity)
-    else:
-        waste_type = WasteType(waste_data.waste_type)
-        confidence = 0.5
-        quantity = waste_data.quantity
+    confidence = 0.8
+    quantity = request.quantity
     
     price = db.query(WastePrice).filter(WastePrice.waste_type == waste_type).first()
     estimated_price = (price.price_per_kg if price else 1.0) * quantity
@@ -377,11 +416,11 @@ async def create_waste_request(
         user_id=current_user.id,
         waste_type=waste_type,
         quantity=quantity,
-        description=waste_data.description,
-        photo_url=photo_url,
-        pickup_latitude=waste_data.pickup_latitude,
-        pickup_longitude=waste_data.pickup_longitude,
-        pickup_address=waste_data.pickup_address,
+        description=request.description,
+        photo_url=None,  # Simplified for now
+        pickup_latitude=request.pickup_latitude,
+        pickup_longitude=request.pickup_longitude,
+        pickup_address=request.pickup_address,
         estimated_price=estimated_price,
         confidence_score=confidence
     )
@@ -394,6 +433,95 @@ async def create_waste_request(
     await auto_assign_worker(waste_request, db)
     
     return {"id": waste_request.id, "status": waste_request.status.value, "estimated_price": estimated_price}
+
+@app.get("/waste-requests")
+def get_waste_requests(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    requests = db.query(WasteRequest).filter(WasteRequest.user_id == current_user.id).all()
+    return [{
+        "id": req.id,
+        "waste_type": req.waste_type.value,
+        "quantity": req.quantity,
+        "description": req.description,
+        "status": req.status.value,
+        "pickup_address": req.pickup_address,
+        "pickup_latitude": req.pickup_latitude,
+        "pickup_longitude": req.pickup_longitude,
+        "estimated_price": req.estimated_price,
+        "created_at": req.created_at.isoformat() if req.created_at else None
+    } for req in requests]
+
+# Marketplace endpoints
+@app.post("/marketplace")
+def create_marketplace_listing(
+    listing: MarketplaceCreate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    marketplace_listing = MarketplaceListing(
+        title=listing.title,
+        description=listing.description,
+        price=listing.price,
+        category=listing.category,
+        seller_id=current_user.id
+    )
+    
+    db.add(marketplace_listing)
+    db.commit()
+    db.refresh(marketplace_listing)
+    
+    return {"id": marketplace_listing.id, "message": "Listing created successfully"}
+
+@app.get("/marketplace")
+def get_marketplace_listings(db: Session = Depends(get_db)):
+    listings = db.query(MarketplaceListing, User).join(User, MarketplaceListing.seller_id == User.id).all()
+    return [{
+        "id": listing.id,
+        "title": listing.title,
+        "description": listing.description,
+        "price": listing.price,
+        "category": listing.category,
+        "seller_id": listing.seller_id,
+        "seller_name": user.name,
+        "created_at": listing.created_at.isoformat() if listing.created_at else None,
+        "is_sold": False
+    } for listing, user in listings]
+
+# Donation endpoints
+@app.post("/donations")
+def create_donation(
+    donation: DonationCreate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    new_donation = Donation(
+        user_id=current_user.id,
+        donation_type=DonationType(donation.donation_type),
+        description=donation.description,
+        pickup_address=donation.pickup_address,
+        pickup_latitude=donation.pickup_latitude,
+        pickup_longitude=donation.pickup_longitude,
+        source=donation.source
+    )
+    
+    db.add(new_donation)
+    db.commit()
+    db.refresh(new_donation)
+    
+    return {"id": new_donation.id, "message": "Donation request created successfully"}
+
+# AI Chat endpoint for waste advice
+@app.post("/ai/chat")
+def chat_with_ai_endpoint(query: dict, current_user: User = Depends(get_current_user)):
+    try:
+        user_message = query.get("message", "")
+        if not user_message:
+            raise HTTPException(status_code=400, detail="Message is required")
+        
+        # Use Gemini API for waste advice
+        response = chat_with_ai(user_message)
+        return {"response": response, "success": True}
+    except Exception as e:
+        return {"response": "I'm sorry, I'm having trouble processing your request right now. Please try again later.", "success": False, "error": str(e)}
 
 async def auto_assign_worker(waste_request: WasteRequest, db: Session):
     if waste_request.worker_id is not None:

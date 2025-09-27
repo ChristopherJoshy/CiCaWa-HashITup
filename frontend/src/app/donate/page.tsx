@@ -163,10 +163,10 @@ export default function DonatePage() {
   if (loading) {
     return (
       <AppLayout title="Donate">
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-100 flex items-center justify-center">
           <div className="text-center">
-            <div className="spinner spinner-lg mx-auto mb-4"></div>
-            <p className="text-caption">Loading donation information...</p>
+            <div className="w-12 h-12 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-emerald-600">Loading donation information...</p>
           </div>
         </div>
       </AppLayout>
@@ -175,11 +175,11 @@ export default function DonatePage() {
 
   return (
     <AppLayout title="Donate">
-      <div className="min-h-screen bg-gray-50 pb-20">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-100 pb-20">
         <div 
           className="text-white p-6" 
           style={{
-            background: 'linear-gradient(135deg, var(--emerald-500), var(--emerald-600))'
+            background: 'linear-gradient(135deg, #059669, #10b981, #34d399)'
           }}
         >
           <div className="container">
@@ -193,9 +193,9 @@ export default function DonatePage() {
           </div>
         </div>
 
-        <div className="container py-6">
+        <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="max-w-2xl mx-auto">
-            <div className="card">
+            <div className="bg-white rounded-lg p-6 shadow-lg border border-emerald-200">
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Donation Type */}
                 <div>
