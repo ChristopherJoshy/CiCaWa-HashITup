@@ -1,5 +1,6 @@
 # CiCaWa - Circular Waste Management Platform 🌱♻️
 
+
 **Team: Neural Nomads**
 
 A comprehensive digital platform that revolutionizes waste management by creating a circular economy ecosystem connecting citizens, workers, NGOs, and businesses.
@@ -88,6 +89,7 @@ Bot: "Old clothes options:
 • DIY: Cut into cleaning rags or craft materials
 • Special: Donate winter clothes during cold season"
 ```
+
 
 ### 👥 Role-Based Access System
 
