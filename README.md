@@ -341,7 +341,7 @@ localStorage.clear()
 We welcome contributions! Please read our contribution guidelines and submit pull requests for improvements.
 
 ---
-
+.
 **Built with ❤️ by Neural Nomads**  
 *Making waste management smarter, sustainable, and profitable for everyone.*
 
